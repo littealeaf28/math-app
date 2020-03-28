@@ -1,18 +1,20 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import Menu from './components/Menu';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import Menu from './screens/Menu';
+import Home from './screens/Home';
+import Problem from './screens/Problem';
+
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <Menu></Menu>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={Home}/>
+        <Stack.Screen name="Menu" component={Menu}/>
+        <Stack.Screen name="Problem" component={Problem}/>
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
