@@ -11,6 +11,9 @@ export default function Menu() {
   ]);
 
   const updateProblems = (text, index) => {
+    if (text === '') {
+      text = '0';
+    }
     problems[index].number = text;
     setProblems(problems);
     console.log(problems);
@@ -18,6 +21,7 @@ export default function Menu() {
 
   return (
     <View>
+      <Text>Errors</Text>
       <FlatList
         data={problems}
         renderItem={({item, index}) => (
@@ -28,23 +32,8 @@ export default function Menu() {
             placeholder={problems[index].number}
             />
           </View>
-        )}
-      />
+        )}/>
+        <Text>Onwards!</Text>
     </View>
-    /* <View style={styles.main}>
-      <Text>Menu!</Text>
-      <View style={styles.menuButton}>
-        <Text>Add!</Text>
-      </View>
-      <View style={styles.menuButton}>
-        <Text>Subtract!</Text>
-      </View>
-      <View style={styles.menuButton}>
-        <Text>Multiply!</Text>
-      </View>
-      <View style={styles.menuButton}>
-        <Text>Divide!</Text>
-      </View>
-    </View> */
   );
 }
