@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View ,Button} from 'react-native';
+import { Text, View } from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 //import { NavigationContainer } from '@react-navigation/native';
 import {styles} from '../styles.js'

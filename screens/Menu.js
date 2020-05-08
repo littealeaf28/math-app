@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Text, View, FlatList, TextInput } from 'react-native';
 import { styles } from '../styles';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 
-export default function Menu() {
+export default function Menu({ navigation }) {
   const [problems, setProblems] = useState([
     { name: 'Add', number: '0', key: '1' },
     { name: 'Subtract', number: '0', key: '2' },
@@ -33,7 +34,10 @@ export default function Menu() {
             />
           </View>
         )}/>
-        <Text>Onwards!</Text>
+        <TouchableHighlight style = {styles.button} title="Go to Menu Page"
+      onPress={() => navigation.navigate('Problem')}>
+          <Text>Go to Problems</Text>
+        </TouchableHighlight>
     </View>
   );
 }
