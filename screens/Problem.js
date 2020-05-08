@@ -3,10 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { Text, TextInput, View ,Button} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
-import ProgressBar from 'react-native-progress/Bar';
+import {styles} from '../styles.js'
 import * as Progress from 'react-native-progress';
+
 export default function Problem({navigation}) {
-  const counter = questionCount(20);
+  const counter = questionCount(5);
   const correct = correctCount();
   const question = manageQuestions();
   const [answer, onChangeAnswer] = useState("");
@@ -28,12 +29,12 @@ export default function Problem({navigation}) {
       onChangeAnswer("");
     }
     else{
-      navigation.navigate('Results');
+      navigation.navigate('Results',{corr : correct.numCorrect});
     }
   }
   return (
     <View>
-        <Progress.Bar progress={1-counter.remainingQuestions/20.0} width={200} />
+        <Progress.Bar progress={1-counter.remainingQuestions/5.0} width={200} />
         <Text>Number of Questions Left: {counter.remainingQuestions}</Text>
         <Text>Number correct: {correct.numCorrect} </Text>
         <Text>{question.first} + {question.second} = {question.answer} </Text>
@@ -52,7 +53,7 @@ export default function Problem({navigation}) {
           onSubmitEditing={()=> onSubmit()}
         />
         <Text>Your answer: {answer}</Text>
-        <TouchableHighlight title="Go to Home Page" onPress={() => navigation.navigate('Home')}>
+        <TouchableHighlight style = {styles.button} title="Go to Home Page" onPress={() => navigation.navigate('Home')}>
           <Text>Go to Home Page</Text>
         </TouchableHighlight>
     </View>
