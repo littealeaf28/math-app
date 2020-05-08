@@ -1,17 +1,39 @@
-import React from 'react';
-import { Text, View ,Button} from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { TouchableHighlight } from 'react-native-gesture-handler';
-import {styles} from '../styles.js'
+import React, { useState } from 'react';
+import { Text, View, FlatList, TextInput } from 'react-native';
+import { styles } from '../styles';
 
-export default function Menu({navigation}) {
+export default function Menu() {
+  const [problems, setProblems] = useState([
+    { name: 'Add', number: '0', key: '1' },
+    { name: 'Subtract', number: '0', key: '2' },
+    { name: 'Multiply', number: '0', key: '3' },
+    { name: 'Divide', number: '0', key: '4' }
+  ]);
+
+  const updateProblems = (text, index) => {
+    if (text === '') {
+      text = '0';
+    }
+    problems[index].number = text;
+    setProblems(problems);
+    console.log(problems);
+  }
+
   return (
     <View>
-      <Text>Menu!</Text>
-      <TouchableHighlight style = {styles.button} title="Go to Problem Page" onPress={() => navigation.navigate('Problem')}>
-        <Text>Go to Problem Page</Text>
-      </TouchableHighlight>
-
+      <Text>Errors</Text>
+      <FlatList
+        data={problems}
+        renderItem={({item, index}) => (
+          <View>
+            <Text>{item.name}</Text>
+            <TextInput keyboardType='numeric' 
+            onChangeText={(text) => updateProblems(text, index)}
+            placeholder={problems[index].number}
+            />
+          </View>
+        )}/>
+        <Text>Onwards!</Text>
     </View>
   );
 }
