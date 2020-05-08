@@ -10,14 +10,13 @@ export default function Menu({ navigation }) {
     { name: 'Multiply', number: '0', key: '3' },
     { name: 'Divide', number: '0', key: '4' }
   ]);
-
+  
   const updateProblems = (text, index) => {
     if (text === '') {
       text = '0';
     }
     problems[index].number = text;
     setProblems(problems);
-    console.log(problems);
   }
 
   return (
@@ -30,12 +29,11 @@ export default function Menu({ navigation }) {
             <Text>{item.name}</Text>
             <TextInput keyboardType='numeric' 
             onChangeText={(text) => updateProblems(text, index)}
-            placeholder={problems[index].number}
-            />
+            placeholder={problems[index].number}/>
           </View>
         )}/>
-        <TouchableHighlight style = {styles.button} title="Go to Menu Page"
-      onPress={() => navigation.navigate('Problem')}>
+        <TouchableHighlight style={styles.button} title="Go to Menu Page" 
+        onPress={() => navigation.navigate('Problem', problems)}>
           <Text>Go to Problems</Text>
         </TouchableHighlight>
     </View>
