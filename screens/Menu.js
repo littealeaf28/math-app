@@ -10,16 +10,22 @@ export default function Menu({ navigation }) {
     { type: 'Multiply', number: '0', key: '3' },
     { type: 'Divide', number: '0', key: '4' }
   ]);
-  const total = useRef(0);
+  const [total, setTotal] = useState(0);
 
   const updateProblems = (text, index) => {
     if (text === '') {
       text = '0';
     }
-    total.current -= parseInt(problems[index].number);
-    total.current += parseInt(text);
     problems[index].number = text;
     setProblems(problems);
+  }
+
+  const updateTotal = () => {
+    let tempTotal = 0;
+    problems.forEach((problem) => {
+      tempTotal += parseInt(problem.number);
+    });
+    setTotal(tempTotal);
   }
 
   /* const resetProblems = () => {
@@ -29,6 +35,11 @@ export default function Menu({ navigation }) {
   }
 
   resetProblems(); */
+
+  const completeMenuSelect = () => {
+    updateTotal();
+    navigation.navigate('Problem', { problems, total });
+  }
 
   return (
     <View>
@@ -40,12 +51,13 @@ export default function Menu({ navigation }) {
             <Text>{item.type}</Text>
             <TextInput keyboardType='numeric' 
             onChangeText={(text) => updateProblems(text, index)}
+            onEndEditing={updateTotal}
             placeholder={problems[index].number}/>
           </View>
       )}/>
       <TouchableHighlight style={styles.button} title="Go to Menu Page" 
-      onPress={() => navigation.navigate('Problem', problems)}>
-        <Text>Go to Problems</Text>
+      onPress={completeMenuSelect}>
+        <Text>{ total } Go to Problems</Text>
       </TouchableHighlight>
     </View>
   );
