@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { Text, View, FlatList, TextInput } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, View, FlatList, TextInput, Keyboard } from 'react-native';
 import { styles } from '../styles';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 
@@ -11,6 +11,18 @@ export default function Menu({ navigation }) {
     { type: 'Divide', number: '0', key: '4' }
   ]);
   const [total, setTotal] = useState(0);
+  const [keyboardIsHidden, setKeyboardHidden] = useState(true);
+  const error = (total > 500) ? 'Please choose less than 500 problems' : null;
+
+  useEffect(() => {
+    Keyboard.addListener('keyboardDidShow', () => { setKeyboardHidden(false); });
+    Keyboard.addListener('keyboardDidHide', () => { setKeyboardHidden(true); });
+
+    return(() => {
+      Keyboard.removeListener('keyboardDidShow');
+      Keyboard.removeListener('keyboardDidHide');
+    })
+  }, []);
 
   const updateProblems = (text, index) => {
     if (text === '') {
@@ -37,13 +49,15 @@ export default function Menu({ navigation }) {
   resetProblems(); */
 
   const completeMenuSelect = () => {
-    updateTotal();
-    navigation.navigate('Problem', { problems, total });
+    // Only enables moving if keyboard is hidden so all problem numbers are properly processed
+    if (!error && keyboardIsHidden) {
+      navigation.navigate('Problem', { problems, total });
+    }
   }
 
   return (
     <View>
-      <Text>Errors</Text>
+      <Text>{ error }</Text>
       <FlatList
         data={problems}
         renderItem={({item, index}) => (
