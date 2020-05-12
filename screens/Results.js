@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View ,Button} from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
+import { styles } from '../styles';
 //import { NavigationContainer } from '@react-navigation/native';
 
 export default function Results({route,navigation}) {
@@ -9,7 +10,7 @@ export default function Results({route,navigation}) {
   return (
     <View>
       <Text>Results {corr} </Text>
-      <TouchableHighlight title="Go to Menu Page"
+      <TouchableHighlight style={styles.button} title="Go to Menu Page"
       onPress={() => navigation.navigate('Home')}>
         <Text>Return Home</Text>
       </TouchableHighlight>

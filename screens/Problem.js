@@ -6,38 +6,60 @@ import { TouchableHighlight } from 'react-native-gesture-handler';
 import {styles} from '../styles.js'
 import * as Progress from 'react-native-progress';
 
-export default function Problem({navigation}) {
-  const counter = questionCount(5);
-  const correct = correctCount();
-  const question = manageQuestions();
-  const [answer, onChangeAnswer] = useState("");
-  function onDecrement(){
-    counter.handleDecrement();
-    correct.handleCorrect();
+export default function Problem({route,navigation}) {
+  const {problems} = route.params;
+  const {total} = route.params;
+  //console.log(total);
+  //get the number of each type of question
+  var count =[];
+  for(var i=0;i<problems.length;i++){
+    count = [...count,problems[i].number];
   }
+  //console.log("Count: " + count);
+
+  const op = manageOperator(count);
+  //console.log(op.operator);
+  //console.log(op.count);
+  
+  const question = manageQuestions();
+  const data = questionData(total);
+
+  //for the form (updating the answer box)
+  const [answer, onChangeAnswer] = useState("");
+  
+  
   function onSubmit(){
-    
-    //if function is correct, increment correct, we will assume correctness for now
+    console.log("Submitted with operator = " + op.operator);
+    //if function is correct, increment correct
+    var newCorrect;
     if(answer == question.answer){
-      correct.handleCorrect();
-    }
+      newCorrect = data.handleCorrect();
+     }
     
     //if questionCount > 0, then decrement and generate a new question
-    if(counter.remainingQuestions > 1){
-      counter.handleDecrement();
-      question.newQuestion();
+    if(data.remainingQuestions > 1){
+      
+      data.handleDecrement();
+      newOp = op.updateOperator();
+      console.log("New operator: " + newOp);
+      question.newQuestion(newOp);
       onChangeAnswer("");
     }
     else{
-      navigation.navigate('Results',{corr : correct.numCorrect});
+      //otherwise, navigate to results page. Here we need to send problems, as well as the number of questions
+      //correct for each(in separate array? )
+     
+      navigation.navigate('Results',{corr : newCorrect});
     }
   }
   return (
     <View>
-        <Progress.Bar progress={1-counter.remainingQuestions/5.0} width={200} />
-        <Text>Number of Questions Left: {counter.remainingQuestions}</Text>
-        <Text>Number correct: {correct.numCorrect} </Text>
-        <Text>{question.first} + {question.second} = {question.answer} </Text>
+        <Progress.Bar progress={1-data.remainingQuestions/(total*1.0)} width={200} />
+        <Text>Number of Questions Left: {data.remainingQuestions}</Text>
+        <Text>Number correct: {data.numCorrect} </Text>
+        <Text>Total: {total}</Text>
+        <Text> TEst: {problems[0].type}</Text>
+  <Text>{question.first} {op.operator} {question.second} = {question.answer} </Text>
         
         
 
@@ -60,6 +82,37 @@ export default function Problem({navigation}) {
   );
 }
 
+function manageOperator(c){
+  const operators = ["+","-","x","/"];
+  const [count,setCount] = useState(c);
+  const [counter,incrementCounter] = useState(0);
+  const [operator,setOperator] = useState(operators[0]);
+  
+  function updateOperator(){
+    console.log("RUNNING UPDATEOPERATOR with counter = " + counter + "and count[counter] = " + count[counter]);
+    var newCounter = counter;
+      var newCount = [...count];
+      newCount[counter]--;
+      setCount(newCount);
+      console.log("Now count[counter] is " + count[counter] + " vs. "+ newCount[counter]);
+    if(newCount[counter] == 0){
+       newCounter = counter +1;
+      incrementCounter(newCounter);
+      setOperator(operators[newCounter]);
+      console.log("Set operator to "+ operators[newCounter]);
+    }
+    
+      
+    
+    return operators[newCounter];
+  }
+  return {
+    count,
+    operator,
+    updateOperator
+    
+};
+}
 
 function manageQuestions(){
   function generateRandom(){
@@ -68,13 +121,55 @@ function manageQuestions(){
   const[first, setFirst] = useState(generateRandom());
   const[second,setSecond] = useState(generateRandom());
   const[answer, setAnswer] = useState(first + second);
+  
 
-  function newQuestion(){
+  function newQuestion(op){
+    console.log("Operator is: " + op + " and generating new question");
     let a = generateRandom();
     let b = generateRandom();
+    if(op == "+"){
+        newAddition(a,b);
+    }
+    else if(op == "-"){
+      newSubtraction(a,b);
+    }
+    else if(op == "x"){
+      newMultiplication(a,b);
+    }
+    else{
+      newDivision(a,b);
+    }
+  }
+
+  function newAddition(a,b){
+    console.log("new addition");
     setFirst(a);
     setSecond(b);
     setAnswer(a + b);
+  }
+  function newSubtraction(a,b){
+    console.log("new sub");
+    if(a < b){
+      a = a +b;
+      b = a-b;
+      a = a-b;
+    }
+    setFirst(a);
+    setSecond(b);
+    setAnswer(a - b);
+  }
+  function newMultiplication(a,b){
+    console.log("new mult");
+    setFirst(a);
+    setSecond(b);
+    setAnswer(a * b);
+  }
+  function newDivision(a,b){
+    //he doesn't do this rn.. maybe will change to word problems?
+    //if we do want to do division additional checks needed
+    setFirst(a);
+    setSecond(b);
+    setAnswer(a * b);
   }
   return {
       first,
@@ -85,7 +180,7 @@ function manageQuestions(){
 }
 
 
-function correctCount(){
+/*function correctCount(){
   const[numCorrect, setValue]=useState(0);
   function handleCorrect(){
     setValue(numCorrect + 1);
@@ -95,20 +190,27 @@ function correctCount(){
     numCorrect,
     handleCorrect
   };
-}
+}*/
 
-function questionCount(initialNum){
+function questionData(initialNum){
   const [remainingQuestions, setValue] = useState(initialNum);
+  const[numCorrect, setCorrect]=useState(0);
+  function handleCorrect(){
+    setCorrect(numCorrect + 1);
+    return numCorrect +1;
+  }
   function handleDecrement() {
     if(remainingQuestions >0){
-      setValue(remainingQuestions -1);
+      setValue(remainingQuestions - 1);
     }
    
   }
 
   return {
     remainingQuestions,
-    handleDecrement
+    handleDecrement,
+    numCorrect,
+    handleCorrect
   }
 }
 

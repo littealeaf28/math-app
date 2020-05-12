@@ -16,6 +16,7 @@ export default function Menu({ navigation }) {
     if (text === '') {
       text = '0';
     }
+    //update the array itself, and then call setProblems
     problems[index].number = text;
     setProblems(problems);
   }
