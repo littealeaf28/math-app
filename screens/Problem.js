@@ -9,20 +9,22 @@ import * as Progress from 'react-native-progress';
 export default function Problem({route,navigation}) {
   const {problems} = route.params;
   const {total} = route.params;
-  //console.log(total);
-  //get the number of each type of question
-  var count =[];
-  for(var i=0;i<problems.length;i++){
-    count = [...count,problems[i].number];
+  const [count, setCount] =useState(null);
+  const op = manageOperator();
+  const data = questionData(total);
+  if(count == null){
+    c1 = problems.map(x=> x.number);
+    setCount(c1);
+    //also set count for op and data
+    op.updateCount(c1);
+    data.updateCount(c1);
   }
-  //console.log("Count: " + count);
-
-  const op = manageOperator(count);
-  //console.log(op.operator);
-  //console.log(op.count);
+  console.log("Count: " + count);
+  
+  
   
   const question = manageQuestions();
-  const data = questionData(total);
+  
 
   //for the form (updating the answer box)
   const [answer, onChangeAnswer] = useState("");
@@ -33,7 +35,7 @@ export default function Problem({route,navigation}) {
     //if function is correct, increment correct
     var newCorrect;
     if(answer == question.answer){
-      newCorrect = data.handleCorrect();
+      newCorrect = data.handleCorrect(op.counter);
      }
     
     //if questionCount > 0, then decrement and generate a new question
@@ -49,7 +51,7 @@ export default function Problem({route,navigation}) {
       //otherwise, navigate to results page. Here we need to send problems, as well as the number of questions
       //correct for each(in separate array? )
      
-      navigation.navigate('Results',{corr : newCorrect});
+      navigation.navigate('Results',{total : total,data: data});
     }
   }
   return (
@@ -82,12 +84,16 @@ export default function Problem({route,navigation}) {
   );
 }
 
-function manageOperator(c){
+function manageOperator(){
   const operators = ["+","-","x","/"];
-  const [count,setCount] = useState(c);
+  const [count,setCount] = useState(null);
   const [counter,incrementCounter] = useState(0);
   const [operator,setOperator] = useState(operators[0]);
-  
+  console.log("Count in manageOperator" + count);
+
+  function updateCount(c){
+      setCount(c);
+  }
   function updateOperator(){
     console.log("RUNNING UPDATEOPERATOR with counter = " + counter + "and count[counter] = " + count[counter]);
     var newCounter = counter;
@@ -107,7 +113,8 @@ function manageOperator(c){
     return operators[newCounter];
   }
   return {
-    count,
+    updateCount,
+    counter,
     operator,
     updateOperator
     
@@ -118,6 +125,7 @@ function manageQuestions(){
   function generateRandom(){
      return Math.floor(Math.random()*10);
   }
+  //this may be inconsistent if there is no addition. Fix later lol
   const[first, setFirst] = useState(generateRandom());
   const[second,setSecond] = useState(generateRandom());
   const[answer, setAnswer] = useState(first + second);
@@ -195,8 +203,17 @@ function manageQuestions(){
 function questionData(initialNum){
   const [remainingQuestions, setValue] = useState(initialNum);
   const[numCorrect, setCorrect]=useState(0);
-  function handleCorrect(){
+  const[arrayCorrect,setIndividualCorrect] = useState([0,0,0,0]);
+  const[count,setCount] = useState(null);
+  function updateCount(c){
+    setCount(c);
+  }
+  function handleCorrect(counter){
     setCorrect(numCorrect + 1);
+    var newArrCorrect = [...arrayCorrect];
+    newArrCorrect[counter]++;
+    setIndividualCorrect(newArrCorrect);
+    console.log(newArrCorrect);
     return numCorrect +1;
   }
   function handleDecrement() {
@@ -207,10 +224,13 @@ function questionData(initialNum){
   }
 
   return {
+    count,
+    arrayCorrect,
     remainingQuestions,
     handleDecrement,
     numCorrect,
-    handleCorrect
+    handleCorrect,
+    updateCount
   }
 }
 
