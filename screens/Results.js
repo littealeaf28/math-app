@@ -4,6 +4,7 @@ import { TouchableHighlight } from 'react-native-gesture-handler';
 import { styles } from '../styles';
 //import { NavigationContainer } from '@react-navigation/native';
 import email from 'react-native-email';
+import moment from 'moment';
 export default function Results({route,navigation}) {
     //const test = navigation.getParam(corr);
     const {total} = route.params;
@@ -17,7 +18,7 @@ export default function Results({route,navigation}) {
       <Text>RESULTS </Text>
       <Text>Number Correct out of {total} : {totalCorrect}</Text>
       <ResultsDisplay results={res}  />
-      <SendEmail></SendEmail>
+      <SendEmail  total = {total} totalCorrect={totalCorrect} results={res}/>
       <TouchableHighlight style={styles.button} title="Go to Menu Page"
       onPress={() => navigation.navigate('Home')}>
         <Text>Return Home</Text>
@@ -25,13 +26,28 @@ export default function Results({route,navigation}) {
     </View>
   );
 }
-export function SendEmail(){
+export function SendEmail({total, totalCorrect,results}){
   handleEmail = ()=>{
     const to = ['dbz6828@gmail.com'] // string or array of email addresses
         email(to, {
-            subject: 'TEST MATH APP',
-            body: 'HOHOJOJO'
+            subject: getSubject(),
+            body: getBody()
         }).catch(console.error)
+  }
+  getSubject = () =>{
+    var date = moment()
+    .utcOffset('+05:30')
+    .format('YYYY-MM-DD hh:mm:ss a');
+
+    return "Edo Wado Update: " + date;
+  }
+  getBody = () =>{
+    const lineBreak = "<br>";
+    var body ="RESULTS" + lineBreak + "Total: " + totalCorrect + "/" + total + lineBreak;
+    for(i =0;i < 4;i++){
+      body = body + results[i].type + " : " + results[i].numCorr + "/" + results[i].numTotal + lineBreak;
+    }
+    return body;
   }
   return(
     <View>
