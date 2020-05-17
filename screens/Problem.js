@@ -28,12 +28,27 @@ export default function Problem({route,navigation}) {
 
   //for the form (updating the answer box)
   const [answer, onChangeAnswer] = useState("");
-  
+  function createResults(){
+    var resultArray=[];
+    for(i=0;i <4;i++){
+      resultArray.push(
+        {
+          type: problems[i].type,
+          numTotal : count[i],
+          numCorr: data.arrayCorrect[i].toString(),
+          key: i
+        }
+      );
+    }
+    data.updateResultsData(resultArray);
+    return resultArray;
+  }
   
   function onSubmit(){
     console.log("Submitted with operator = " + op.operator);
     //if function is correct, increment correct
-    var newCorrect;
+    var newCorrect = data.numCorrect;
+    console.log("Created new Correct = " + newCorrect);
     if(answer == question.answer){
       newCorrect = data.handleCorrect(op.counter);
      }
@@ -48,10 +63,11 @@ export default function Problem({route,navigation}) {
       onChangeAnswer("");
     }
     else{
-      //otherwise, navigate to results page. Here we need to send problems, as well as the number of questions
-      //correct for each(in separate array? )
+      //otherwise, navigate to results page. 
+      //call function to create JS array for Results Flatlist?
+      let res = createResults();
      
-      navigation.navigate('Results',{total : total,data: data});
+      navigation.navigate('Results',{total : total, totalCorrect : newCorrect,res: res});
     }
   }
   return (
@@ -59,9 +75,8 @@ export default function Problem({route,navigation}) {
         <Progress.Bar progress={1-data.remainingQuestions/(total*1.0)} width={200} />
         <Text>Number of Questions Left: {data.remainingQuestions}</Text>
         <Text>Number correct: {data.numCorrect} </Text>
-        <Text>Total: {total}</Text>
-        <Text> TEst: {problems[0].type}</Text>
-  <Text>{question.first} {op.operator} {question.second} = {question.answer} </Text>
+
+        <Text>{question.first} {op.operator} {question.second} = {question.answer} </Text>
         
         
 
@@ -205,6 +220,11 @@ function questionData(initialNum){
   const[numCorrect, setCorrect]=useState(0);
   const[arrayCorrect,setIndividualCorrect] = useState([0,0,0,0]);
   const[count,setCount] = useState(null);
+  //final array to pass....but like the question is, will I need to do this? Do I even need a copy of it here?
+  const[resultsData,updateResults]=useState(null);
+  function updateResultsData(res){
+      updateResults(res);
+  }
   function updateCount(c){
     setCount(c);
   }
@@ -230,7 +250,9 @@ function questionData(initialNum){
     handleDecrement,
     numCorrect,
     handleCorrect,
-    updateCount
+    updateCount,
+    resultsData,
+    updateResultsData
   }
 }
 

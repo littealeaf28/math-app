@@ -7,13 +7,16 @@ import email from 'react-native-email';
 export default function Results({route,navigation}) {
     //const test = navigation.getParam(corr);
     const {total} = route.params;
-    const {data} = route.params;
-    console.log(data);
+    const {totalCorrect} = route.params;
+    console.log(totalCorrect);
+    
+    const {res} = route.params;
+    console.log(res);
   return (
     <View>
-      <Text>Results </Text>
-      <Text>Number Correct out of {total} : {data.numCorrect}</Text>
-      <ResultsDisplay total={total} data = {data} />
+      <Text>RESULTS </Text>
+      <Text>Number Correct out of {total} : {totalCorrect}</Text>
+      <ResultsDisplay results={res}  />
       <SendEmail></SendEmail>
       <TouchableHighlight style={styles.button} title="Go to Menu Page"
       onPress={() => navigation.navigate('Home')}>
@@ -39,19 +42,19 @@ export function SendEmail(){
     </View>
   );
 }
-export function ResultsDisplay({total,data}){
-  console.log(data);
+export function ResultsDisplay({results}){
+  console.log(results);
   return(
     <View>
-      <Text>RESULTS</Text>
-      <Text>Total Correct:{data.numCorrect} / {total} </Text>
-      {/*There will be a flatlist here eventually TnT */}
+      <FlatList data={results}
+      renderItem={({item})=><Item item={item}/>}/>
     </View>
   );
 }
-
-function Item({totalQuestions,numCorrect}){
-  return(
-    <Text>Number Correct: {numCorrect} / {totalQuestions}</Text>
-  )
+function Item({ item }) {
+  return (
+    <View >
+      <Text >{item.type} : {item.numCorr} / {item.numTotal} </Text>
+    </View>
+  );
 }
