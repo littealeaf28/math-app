@@ -21,14 +21,13 @@ export default function Menu({ navigation }) {
     return(() => {
       Keyboard.removeListener('keyboardDidShow');
       Keyboard.removeListener('keyboardDidHide');
-    })
+    });
   }, []);
 
   const updateProblems = (text, index) => {
     if (text === '') {
       text = '0';
     }
-    //update the array itself, and then call setProblems
     problems[index].number = text;
     setProblems(problems);
   }
