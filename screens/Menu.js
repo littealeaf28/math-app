@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, FlatList, TextInput, Keyboard } from 'react-native';
 import { styles } from '../styles';
 import { TouchableHighlight } from 'react-native-gesture-handler';
+import { Button } from 'react-native-elements';
 
 export default function Menu({ navigation }) {
   const [problems, setProblems] = useState([
@@ -69,10 +70,11 @@ export default function Menu({ navigation }) {
             placeholder={problems[index].number}/>
           </View>
       )}/>
-      <TouchableHighlight style={styles.button} title="Go to Menu Page" 
+      { /* <TouchableHighlight style={styles.button} title="Go to Menu Page" 
       onPress={completeMenuSelect}>
         <Text>{ total } Go to Problems</Text>
-      </TouchableHighlight>
+        </TouchableHighlight> */ }
+      <Button onPress={completeMenuSelect} title="Go to Problems"/>
     </View>
   );
 }
