@@ -12,6 +12,8 @@ export default function Problem({route,navigation}) {
   const [count, setCount] =useState(null);
   const op = manageOperator();
   const data = questionData(total);
+  const [finished,setFinished] = useState(false);
+  console.log("BEFORE: "+ count);
   if(count == null){
     c1 = problems.map(x=> x.number);
     setCount(c1);
@@ -19,7 +21,7 @@ export default function Problem({route,navigation}) {
     op.updateCount(c1);
     data.updateCount(c1);
   }
-  console.log("Count: " + count);
+  console.log("Count AFTER: " + count);
   
   
   
@@ -28,6 +30,7 @@ export default function Problem({route,navigation}) {
 
   //for the form (updating the answer box)
   const [answer, onChangeAnswer] = useState("");
+
   function createResults(){
     var resultArray=[];
     for(i=0;i <4;i++){
@@ -40,23 +43,35 @@ export default function Problem({route,navigation}) {
         }
       );
     }
-    data.updateResultsData(resultArray);
+    //make updateResultsData asyncronous?
+    
+      data.updateResultsData(resultArray);
+    console.log("INSIDE CREATERESULTS: " + resultArray);
+    //data.updateResultsData(resultArray);
     return resultArray;
   }
   
+  /*if((data.remainingQuestions == 0)){
+    let res = createResults();
+    console.log(res);
+    navigation.navigate('Results',{total : total, totalCorrect : data.numCorrect,res: res});
+  }*/
+  //if(data.remainingQuestions == )
   function onSubmit(){
     console.log("Submitted with operator = " + op.operator);
     //if function is correct, increment correct
     var newCorrect = data.numCorrect;
     console.log("Created new Correct = " + newCorrect);
     if(answer == question.answer){
-      newCorrect = data.handleCorrect(op.counter);
+     
+        newCorrect =  data.handleCorrect(op.counter);
+  
      }
     
     //if questionCount > 0, then decrement and generate a new question
+    data.handleDecrement();
+    onChangeAnswer("");
     if(data.remainingQuestions > 1){
-      
-      data.handleDecrement();
       newOp = op.updateOperator();
       console.log("New operator: " + newOp);
       question.newQuestion(newOp);
@@ -65,10 +80,27 @@ export default function Problem({route,navigation}) {
     else{
       //otherwise, navigate to results page. 
       //call function to create JS array for Results Flatlist?
-      let res = createResults();
-     
-      navigation.navigate('Results',{total : total, totalCorrect : newCorrect,res: res});
+      //let res = createResults();
+      /*let promise = new Promise(function(resolve,reject){
+          var results1 = createResults();
+          setTimeout(() => resolve(results1), 3000);
+         // resolve(results1);
+      });
+      promise.then(result=>navigation.navigate('Results',{total : total, totalCorrect : newCorrect,res: result}),
+              error=>alert(error));*/
+      //make createResults more of a promise thing? and then navigate can subscribe?
+      setFinished(true);
+      //navigation.navigate('Results',{total : total, totalCorrect : newCorrect,res: res});
     }
+    
+  }
+
+
+  function onFinish(){
+    let res = createResults();
+    console.log("COMPUTED RESULTS SHOULD BE DIS: " + res);
+    navigation.navigate('Results',{total : total, totalCorrect : data.numCorrect,res: res});
+    
   }
   return (
     <View>
@@ -92,12 +124,18 @@ export default function Problem({route,navigation}) {
           onSubmitEditing={()=> onSubmit()}
         />
         <Text>Your answer: {answer}</Text>
+        {finished == false ? (<Text>Not finished</Text>) :
+        (<TouchableHighlight style = {styles.button} title="finish" onPress={() => onFinish()}>
+        <Text>Finish!</Text>
+      </TouchableHighlight>)}
+        
         <TouchableHighlight style = {styles.button} title="Go to Home Page" onPress={() => navigation.navigate('Home')}>
           <Text>Go to Home Page</Text>
         </TouchableHighlight>
     </View>
   );
 }
+
 
 function manageOperator(){
   const operators = ["+","-","x","/"];
@@ -203,17 +241,6 @@ function manageQuestions(){
 }
 
 
-/*function correctCount(){
-  const[numCorrect, setValue]=useState(0);
-  function handleCorrect(){
-    setValue(numCorrect + 1);
-    
-  }
-  return {
-    numCorrect,
-    handleCorrect
-  };
-}*/
 
 function questionData(initialNum){
   const [remainingQuestions, setValue] = useState(initialNum);
@@ -223,13 +250,14 @@ function questionData(initialNum){
   //final array to pass....but like the question is, will I need to do this? Do I even need a copy of it here?
   const[resultsData,updateResults]=useState(null);
   function updateResultsData(res){
-      updateResults(res);
+       updateResults(res);
   }
   function updateCount(c){
     setCount(c);
   }
   function handleCorrect(counter){
-    setCorrect(numCorrect + 1);
+    setCorrect(numCorrect => numCorrect + 1);
+    console.log("UPDATED numCORRECT: " + numCorrect);
     var newArrCorrect = [...arrayCorrect];
     newArrCorrect[counter]++;
     setIndividualCorrect(newArrCorrect);

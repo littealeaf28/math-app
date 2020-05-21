@@ -7,12 +7,12 @@ import email from 'react-native-email';
 import moment from 'moment';
 export default function Results({route,navigation}) {
     //const test = navigation.getParam(corr);
-    const {total} = route.params;
-    const {totalCorrect} = route.params;
+    const {total,totalCorrect,res} = route.params;
+   // const {totalCorrect} = route.params;
     console.log(totalCorrect);
     
-    const {res} = route.params;
-    console.log(res);
+   // const {res} = route.params;
+    console.log("IN RESULTS PAGE: " + res);
   return (
     <View>
       <Text>RESULTS </Text>
