@@ -1,7 +1,6 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
-import { styles } from '../styles.js';
 import { Button } from 'react-native-elements';
 
 export default function Home({ navigation }) {
@@ -13,7 +12,7 @@ export default function Home({ navigation }) {
         <Text>Go to menu page</Text>
   </TouchableHighlight> */ }
 
-      <Button type='outline' raised onPress={() => navigation.navigate('Menu')} title="Go to menu"/>
+      <Button onPress={() => navigation.navigate('Menu')} title="Go to menu"/>
     </View>
   );
 }
