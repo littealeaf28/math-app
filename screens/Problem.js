@@ -7,8 +7,7 @@ import {styles} from '../styles.js'
 import * as Progress from 'react-native-progress';
 
 export default function Problem({route,navigation}) {
-  const {problems} = route.params;
-  const {total} = route.params;
+  const {problems, total} = route.params;
   const [count, setCount] =useState(null);
   const op = manageOperator();
   const data = questionData(total);
@@ -20,8 +19,6 @@ export default function Problem({route,navigation}) {
     data.updateCount(c1);
   }
   console.log("Count: " + count);
-  
-  
   
   const question = manageQuestions();
   
@@ -43,7 +40,7 @@ export default function Problem({route,navigation}) {
     data.updateResultsData(resultArray);
     return resultArray;
   }
-  
+
   function onSubmit(){
     console.log("Submitted with operator = " + op.operator);
     //if function is correct, increment correct
@@ -229,9 +226,9 @@ function questionData(initialNum){
     setCount(c);
   }
   function handleCorrect(counter){
-    setCorrect(numCorrect + 1);
+    /* setCorrect(numCorrect + 1);
     var newArrCorrect = [...arrayCorrect];
-    newArrCorrect[counter]++;
+    newArrCorrect[counter]++; */
     setIndividualCorrect(newArrCorrect);
     console.log(newArrCorrect);
     return numCorrect +1;

@@ -11,10 +11,23 @@ import Results from './screens/Results';
 const Stack = createStackNavigator();
 
 const theme = {
+  /* colors: {
+    primary: 'blue',
+  }, */
   Button: {
     raised: true,
     type: 'outline',
-    buttonStyle: styles.button
+    titleStyle: {
+      color: 'pink',
+      fontSize: 16
+    },
+    buttonStyle: {        
+      // backgroundColor: "#DDDDDD",
+      borderWidth: 1,
+      padding: 8,
+      borderRadius: 4,
+      backgroundColor: '#666'
+    }
   }
 }
 
