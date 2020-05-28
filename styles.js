@@ -6,6 +6,16 @@ export const styles = StyleSheet.create({
         width: 100,
         borderWidth: 2,
         padding: 10,
+    },
+    text: {
+        fontSize: 30
+    },
+    progress:{
+        height: 10,
+        width: null
+    },
+    resultsText:{
+        fontSize: 20
     }
 });
 

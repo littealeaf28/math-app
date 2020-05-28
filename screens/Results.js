@@ -7,16 +7,16 @@ import email from 'react-native-email';
 import moment from 'moment';
 export default function Results({route,navigation}) {
     //const test = navigation.getParam(corr);
-    const {total} = route.params;
-    const {totalCorrect} = route.params;
+    const {total,totalCorrect,res} = route.params;
+   // const {totalCorrect} = route.params;
     console.log(totalCorrect);
     
-    const {res} = route.params;
-    console.log(res);
+   // const {res} = route.params;
+    console.log("IN RESULTS PAGE: " + res);
   return (
-    <View>
-      <Text>RESULTS </Text>
-      <Text>Number Correct out of {total} : {totalCorrect}</Text>
+    <View >
+      <Text style = {styles.text}>RESULTS </Text>
+      <Text style = {styles.resultsText}>Number Correct out of {total} : {totalCorrect}</Text>
       <ResultsDisplay results={res}  />
       <SendEmail  total = {total} totalCorrect={totalCorrect} results={res}/>
       <TouchableHighlight style={styles.button} title="Go to Menu Page"
@@ -62,7 +62,7 @@ export function ResultsDisplay({results}){
   console.log(results);
   return(
     <View>
-      <FlatList data={results}
+      <FlatList style = {styles.resultsText} data={results}
       renderItem={({item})=><Item item={item}/>}/>
     </View>
   );
@@ -70,7 +70,7 @@ export function ResultsDisplay({results}){
 function Item({ item }) {
   return (
     <View >
-      <Text >{item.type} : {item.numCorr} / {item.numTotal} </Text>
+      <Text style = {styles.resultsText} >{item.type} : {item.numCorr} / {item.numTotal} </Text>
     </View>
   );
 }
