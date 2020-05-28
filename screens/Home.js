@@ -19,7 +19,7 @@ export default function Home({ navigation }) {
       <Image source={Splash} style={{
         width: 200,
         height: 300,
-        resizeMethod: 'resize'
+        // resizeMethod: 'resize'
       }}/>
       <Button onPress={() => navigation.navigate('Menu')} title="Go to menu"/>
     </View>
