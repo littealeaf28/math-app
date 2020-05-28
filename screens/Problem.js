@@ -104,11 +104,11 @@ export default function Problem({route,navigation}) {
   }
   return (
     <View>
-        <Progress.Bar progress={1-data.remainingQuestions/(total*1.0)} width={200} />
-        <Text>Number of Questions Left: {data.remainingQuestions}</Text>
-        <Text>Number correct: {data.numCorrect} </Text>
+        <Progress.Bar  progress={1-data.remainingQuestions/(total*1.0)} width={200} />
+        <Text >Number of Questions Left: {data.remainingQuestions}</Text>
+        <Text >Number correct: {data.numCorrect} </Text>
 
-        <Text>{question.first} {op.operator} {question.second} = {question.answer} </Text>
+        <Text style = {styles.text} >{question.first} {op.operator} {question.second} = {answer} </Text>
         
         
 
@@ -123,7 +123,7 @@ export default function Problem({route,navigation}) {
           keyboardType={"numeric"}
           onSubmitEditing={()=> onSubmit()}
         />
-        <Text>Your answer: {answer}</Text>
+        
         {finished == false ? (<Text>Not finished</Text>) :
         (<TouchableHighlight style = {styles.button} title="finish" onPress={() => onFinish()}>
         <Text>Finish!</Text>

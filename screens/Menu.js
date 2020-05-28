@@ -63,8 +63,8 @@ export default function Menu({ navigation }) {
         data={problems}
         renderItem={({item, index}) => (
           <View>
-            <Text>{item.type}</Text>
-            <TextInput keyboardType='numeric' 
+            <Text style = {styles.text}>{item.type}</Text>
+            <TextInput style = {styles.text} keyboardType='numeric' 
             onChangeText={(text) => updateProblems(text, index)}
             onEndEditing={updateTotal}
             placeholder={problems[index].number}/>

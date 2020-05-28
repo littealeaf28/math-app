@@ -6,7 +6,7 @@ import { Button } from 'react-native-elements';
 export default function Home({ navigation }) {
   return (
     <View>
-      <Text>Home! How ya doing?</Text>
+      <Text>EDO WADO MATH</Text>
       { /* <TouchableHighlight style = {styles.button} title="Go to Menu Page"
       onPress={() => navigation.navigate('Menu')}>
         <Text>Go to menu page</Text>
