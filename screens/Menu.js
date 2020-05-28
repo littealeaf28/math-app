@@ -51,7 +51,7 @@ export default function Menu({ navigation }) {
 
   const completeMenuSelect = () => {
     // Only enables moving if keyboard is hidden so all problem numbers are properly processed
-    if (!error && keyboardIsHidden) {
+    if (!error && keyboardIsHidden && total > 0) {
       navigation.navigate('Problem', { problems, total });
     }
   }
